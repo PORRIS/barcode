@@ -1,0 +1,43 @@
+<!-- HEREDANDO UN HTML O TEMPLATE -->
+{% extends 'base.html'  %}
+<!-- importando un macro -->
+{% import 'macros.html' as macros %}
+
+<!-- importando template de boostrap -->
+{% import 'bootstrap/wtf.html' as wtf %}
+
+<!-- en base.html existe un bloque llamado title por ende se puede cambiar el titulo cuando se hereda -->
+<!-- se agrega super() para que mantenga el titulo que tenga base.html y agregar el que queramos -->
+{% block title %}
+	{{super()}}
+	Bienvenido 
+{% endblock %}
+
+<!--en base.html existe otro bloque llamado content cambiamos el content -->
+{% block content %}
+	{% if user_ip %}
+		<h3>
+		<!--  para los template se usa Jinja2  y para poner variables de usa las llaves y dentro la variables -->
+		tu IP es {{ user_ip }}
+		</h3>
+		{% else %}
+		<a href="{{ url_for('index')}}"> Ir a inicio </a>
+	{% endif %}
+
+	{% if username %}
+		<h1> Bienvenido, {{ username | capitalize}} </h1><!--  con | se puede aplicar filtros para aplicarle al texto-->	
+	{% endif %}
+
+	<div class="container">
+		<h2>Crear una nueva tarea</h2>
+		{{wtf.quick_form(todo_form)}}
+	</div>
+	
+	<ul class="list-group">
+		<!-- loops -->
+		{% for todo in todos %}
+			<!-- renderieando macros importado -->
+			{{ macros.renderizar_todo(todo, delete_form, update_form)}}
+		{% endfor %}
+	<ul>
+	{% endblock %}	

@@ -1,0 +1,20 @@
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% macro renderizar_todo(todo, delete_form, update_form) %}
+    <li class="list-group-item">
+        <span class="badge">{{ todo.to_dict().done }}</span>
+        Descripción: {{ todo.to_dict().description }}
+        <!-- eliminar pero con post y formulario-->
+        <button type="button" class="btn btn-light">
+            {{ wtf.quick_form(delete_form, action=url_for('delete', todo_id=todo.id)) }}
+        </button>            
+        <!-- actualizando-->
+        <button type="button" class="btn btn-light">
+            {{ wtf.quick_form(update_form, action=url_for('update', todo_id=todo.id, done=todo.to_dict().done)) }}
+        </button>                        
+        <!-- eliminar pero con get-->
+        <a href="{{ url_for('delete', todo_id=todo.id)}}"  class="btn d-inline-block btn-danger">Delete</a>
+
+
+    </li>
+{% endmacro %}
