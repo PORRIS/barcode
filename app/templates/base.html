@@ -1,19 +1,31 @@
 {% extends 'bootstrap/base.html' %}
 
-{% block head %}
-    {{ super() }}
+{% block head %}    
 
     <title>
-        {% block title %}Flask Platzi |{% endblock %}
-    </title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+        {% block title %}Barcode |{% endblock %}
+    </title>    
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#000000">
+    <title>Barcode</title>
+    <meta name="description" content="Registro de producto con codigo de barras">
+    <meta name="keywords" content="bootstrap 4, mobile template, cordova, phonegap, mobile, html" />
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/img/favicon.png')}}"  sizes="32x32">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='assets/img/icon/192x192.png')}}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css')}}" >
+    <link rel="manifest" href="{{ url_for('static', filename='assets/__manifest.json')}}">
 {% endblock %}
 
 {% block body %}
-    {% block navbar %}
-        {% include 'navbar.html' %}
-    {% endblock %}
-
+    <!-- loader -->
+    <div id="loader">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+    <!-- * loader -->
     {% for category, message in get_flashed_messages(with_categories=true) %}
         <div class="alert alert-{{ category }} alert-dismissible">
             <button type="button"
@@ -23,8 +35,25 @@
         </div>
     {% endfor %}
 
-    {% block content %}{% endblock %}
-    {% block scripts %}
-        {{ super() }}
+    {% block content %}
     {% endblock %}
+    {% block scripts %}
+   
+            <!-- ///////////// Js Files ////////////////////  -->
+    <!-- Jquery -->
+    <script src="{{ url_for('static', filename='assets/js/lib/jquery-3.4.1.min.js')}}" ></script>
+    <!-- Bootstrap-->
+    <script src="{{ url_for('static', filename='assets/js/lib/popper.min.js')}}"></script>
+    <script src="{{ url_for('static', filename='assets/js/lib/bootstrap.min.js')}}"></script>
+    
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@5.0.0/dist/ionicons/ionicons.js"></script>
+    <!-- Owl Carousel -->
+    <script src="{{ url_for('static', filename='assets/js/plugins/owl-carousel/owl.carousel.min.js')}}" ></script>
+    <!-- jQuery Circle Progress -->
+    <script src="{{ url_for('static', filename='assets/js/plugins/jquery-circle-progress/circle-progress.min.js')}}" ></script>
+    <!-- Base Js File -->
+    <script src="{{ url_for('static', filename='assets/js/base.js')}}"></script>
+    {% endblock %}
+    
 {% endblock %}

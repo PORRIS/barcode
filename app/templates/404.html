@@ -6,6 +6,47 @@ ERROR 404
 {% endblock %}
 
 {% block content %}
-<h1>Lo sentimos no encontramos lo que buscabas</h1>
-<p>{{error}}</p>
+    <!-- App Header -->
+    <div class="appHeader no-border transparent position-absolute">
+        <div class="left">
+            <a href="javascript:;" class="headerButton goBack">
+                <ion-icon name="chevron-back-outline"></ion-icon>
+            </a>
+        </div>
+        <div class="pageTitle">Página de errores</div>
+        <div class="right">    
+            <a href="{{ url_for('index') }}" class="headerButton">
+                Hecho
+            </a>
+        </div>
+    </div>
+    <!-- * App Header -->
+
+        <!-- App Capsule -->
+        <div id="appCapsule">
+
+            <div class="error-page">
+                <div class="icon-box text-danger">
+                    <ion-icon name="alert-circle"></ion-icon>
+                </div>
+                <h1 class="title">Lo sentimos no encontramos lo que buscabas</h1>
+                <div class="text mb-5">                  
+                     <p>{{error}}</p>
+                </div>
+    
+                <div class="fixed-footer">
+                    <div class="row">
+                        <div class="col-6">                            
+                            <a class="btn btn-secondary btn-lg btn-block" href="{{ url_for('index') }}">Inicio</a>
+                        </div>
+                        <div class="col-6">
+                            <a href="#" class="btn btn-primary btn-lg btn-block">Intentar otra vez</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+        <!-- * App Capsule -->
+
 {% endblock %}

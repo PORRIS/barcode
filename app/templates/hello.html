@@ -15,29 +15,199 @@
 
 <!--en base.html existe otro bloque llamado content cambiamos el content -->
 {% block content %}
-	{% if user_ip %}
-		<h3>
-		<!--  para los template se usa Jinja2  y para poner variables de usa las llaves y dentro la variables -->
-		tu IP es {{ user_ip }}
-		</h3>
-		{% else %}
-		<a href="{{ url_for('index')}}"> Ir a inicio </a>
-	{% endif %}
 
-	{% if username %}
-		<h1> Bienvenido, {{ username | capitalize}} </h1><!--  con | se puede aplicar filtros para aplicarle al texto-->	
-	{% endif %}
-
-	<div class="container">
-		<h2>Crear una nueva tarea</h2>
-		{{wtf.quick_form(todo_form)}}
+    <!-- App Header -->
+    <div class="appHeader bg-primary scrolled">
+        <div class="left">
+            <a href="#" class="headerButton" data-toggle="modal" data-target="#sidebarPanel">
+                <ion-icon name="menu-outline"></ion-icon>
+            </a>
+        </div>
+        <div class="pageTitle">
+            Home
+        </div>
+        <div class="right">
+            <a href="javascript:;" class="headerButton toggle-searchbox">
+                <ion-icon name="search-outline"></ion-icon>
+            </a>
+        </div>
+    </div>
+    <!-- * App Header -->
+<!-- App Capsule -->
+<div id="appCapsule">
+	<div class="header-large-title">
+		<h1 class="title">Home</h1>
+		{% if username %}
+			<h4 class="subtitle">Bienvenido a Barcode  {{ username | capitalize}}</h4>
+		{% endif %}
 	</div>
+	<div class="section mt-3 mb-3">
+		<div class="card">
+			<div class="card-body d-flex justify-content-between align-items-end">
+				<div>
+					<h6 class="card-subtitle">Home</h6>
+					<h5 class="card-title mb-0 d-flex align-items-center justify-content-between">
+						Dark Mode
+					</h5>
+				</div>
+				<div class="custom-control custom-switch">
+					<input type="checkbox" class="custom-control-input dark-mode-switch" id="darkmodeswitch">
+					<label class="custom-control-label" for="darkmodeswitch"></label>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="section mt-3 mb-3">
+		<div class="card">
+			<img src="{{ url_for('static', filename='assets/img/sample/photo/wide4.jpg')}}" class="card-img-top" alt="image">
+			<div class="card-body">
+				<h6 class="card-subtitle">Home</h6>
+				<h5 class="card-title">Lector</h5>
+				<p class="card-text">
+					Lea codigo de barras desde su celular o suba una imagen para ser procesada.
+				</p>
+				<a href="app-components.html" class="btn btn-primary">
+					<ion-icon name="cube-outline"></ion-icon>
+					Iniciar
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div class="section mt-3 mb-3">
+		<div class="card">
+			<img src="{{ url_for('static', filename='assets/img/sample/photo/wide2.jpg')}}" class="card-img-top" alt="image">
+			<div class="card-body">
+				<h6 class="card-subtitle">Historico</h6>
+				<h5 class="card-title">Mis codigos</h5>
+				<p class="card-text">
+					Observe los codigos registrados en su historico.
+				</p>
+				<a href="app-pages.html" class="btn btn-primary">
+					<ion-icon name="layers-outline"></ion-icon>
+					Ver
+				</a>
+			</div>
+		</div>
+	</div>
+
+	 <!-- app footer -->
+	 <div class="appFooter">
+		<img src="{{ url_for('static', filename='assets/img/logo.png')}}" alt="icon" class="footer-logo mb-2">
+		<div class="footer-title">
+			Copyright © Barcode 2022. All Rights Reserved.
+		</div>
+		<div>Barcode es un proyecto de apredizaje para leer codigos de barras en python.</div>
+			La parte del cliente es realizada en Javascript
+			{% if user_ip %}
+				tu IP es {{ user_ip }}
+			{% endif %}	
+
+		<div class="mt-2">
+			<a href="javascript:;" class="btn btn-icon btn-sm btn-facebook">
+				<ion-icon name="logo-facebook"></ion-icon>
+			</a>
+			<a href="javascript:;" class="btn btn-icon btn-sm btn-twitter">
+				<ion-icon name="logo-twitter"></ion-icon>
+			</a>
+			<a href="javascript:;" class="btn btn-icon btn-sm btn-linkedin">
+				<ion-icon name="logo-linkedin"></ion-icon>
+			</a>
+			<a href="javascript:;" class="btn btn-icon btn-sm btn-instagram">
+				<ion-icon name="logo-instagram"></ion-icon>
+			</a>
+			<a href="javascript:;" class="btn btn-icon btn-sm btn-whatsapp">
+				<ion-icon name="logo-whatsapp"></ion-icon>
+			</a>
+			<a href="#" class="btn btn-icon btn-sm btn-secondary goTop">
+				<ion-icon name="arrow-up-outline"></ion-icon>
+			</a>
+		</div>
+	</div>
+	<!-- * app footer -->
+</div>
+<!-- * App Capsule -->	
+	{% include 'navbar.html' %}
+    <!-- welcome notification  -->
+    <div id="notification-welcome" class="notification-box">
+        <div class="notification-dialog android-style">
+            <div class="notification-header">
+                <div class="in">
+                    <img src="{{ url_for('static', filename='assets/img/icon/72x72.png')}}" alt="image" class="imaged w24">
+                    <strong>Barcode</strong>
+                    <span>just now</span>
+                </div>
+                <a href="#" class="close-button">
+                    <ion-icon name="close"></ion-icon>
+                </a>
+            </div>
+            <div class="notification-content">
+                <div class="in">
+                    <h3 class="subtitle">Bienvenido a Barcode</h3>
+                    <div class="text">
+                        Recomiendo el uso de pantalla completa para una mejor experiencia
+						<a href="javascript:;" class="button go-fs" >                        
+							<ion-icon size="large" name="tablet-landscape"></ion-icon>
+						</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- * welcome notification -->
+
+{% endblock %}	
+{% block scripts %}
+	{{super()}}
+	<script>
+jQuery(document).ready(function($) {
+
+
+	setTimeout(() => {
+		notification('notification-welcome', 5000);		
+	}, 2000);
 	
-	<ul class="list-group">
-		<!-- loops -->
-		{% for todo in todos %}
-			<!-- renderieando macros importado -->
-			{{ macros.renderizar_todo(todo, delete_form, update_form)}}
-		{% endfor %}
-	<ul>
-	{% endblock %}	
+
+	const fsc = document.querySelectorAll('.go-fs');
+  
+fsc.forEach(box => {
+  box.addEventListener('click', function handleClick(event) {
+    if (document.fullscreenElement) {
+		closeFullscreen();
+	} else {
+		openFullscreen();
+	}
+  });
+});
+
+  /* Get the documentElement (<html>) to display the page in fullscreen */
+var elem = document.documentElement;
+
+/* View in fullscreen */
+function openFullscreen() {
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) { /* Safari */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE11 */
+    elem.msRequestFullscreen();
+  }
+}
+
+/* Close fullscreen */
+function closeFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.webkitExitFullscreen) { /* Safari */
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) { /* IE11 */
+    document.msExitFullscreen();
+  }
+}
+
+
+});
+</script>
+{% endblock %}
