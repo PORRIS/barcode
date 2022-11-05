@@ -42,14 +42,16 @@ def put_user(userdata):
     
 
 class UserData:
-    def __init__(self, username, password):
+    def __init__(self, username, password, id = None):
         self.username = username
         self.password = password
+        self.id = id
 
 class UserModel(UserMixin):
     def __init__(self, user_data):
         self.id = user_data.username
         self.password = user_data.password
+        self.username = user_data.id
 
 
     @staticmethod   
@@ -58,6 +60,7 @@ class UserModel(UserMixin):
         user_data = UserData(
         username=user_doc.username,
         password=user_doc.password,
+        id=user_doc.id,
         )
 
         return UserModel(user_data) 

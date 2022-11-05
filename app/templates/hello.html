@@ -68,7 +68,7 @@
 				<p class="card-text">
 					Lea codigo de barras desde su celular o suba una imagen para ser procesada.
 				</p>
-				<a href="app-components.html" class="btn btn-primary">
+				<a href="{{ url_for('lector.index')}}" class="btn btn-primary">
 					<ion-icon name="cube-outline"></ion-icon>
 					Iniciar
 				</a>
@@ -163,13 +163,9 @@
 	{{super()}}
 	<script>
 jQuery(document).ready(function($) {
-
-
 	setTimeout(() => {
 		notification('notification-welcome', 5000);		
 	}, 2000);
-	
-
 	const fsc = document.querySelectorAll('.go-fs');
   
 fsc.forEach(box => {

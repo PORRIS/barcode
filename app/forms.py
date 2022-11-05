@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import StringField, PasswordField, SubmitField, FileField
+from wtforms.fields import StringField, PasswordField, SubmitField, FileField, FloatField
 from flask_wtf.file import FileField, FileRequired,FileAllowed
-from wtforms.validators import DataRequired, InputRequired, EqualTo
+from wtforms.validators import DataRequired, InputRequired, EqualTo, length, NumberRange
 from wtforms import SubmitField as SubmitFieldFile
 
 '''
@@ -21,8 +21,10 @@ class SignUp(FlaskForm):
     password_repeat = PasswordField('Repite tu Password',validators=[DataRequired(),InputRequired(),EqualTo('password')])
     submit = SubmitField('Enviar')    
 
-class TodoForm(FlaskForm):
-    description = StringField('Descripción',validators=[DataRequired()])    
+class BarcodeCreateForm(FlaskForm):
+    barcode = StringField('Codigo',validators=[DataRequired(message='Codigo obligatorio'),length(min=2,max=80, message='Codigo debe estar entre 2 y 80')])    
+    valor = FloatField('Valor',validators=[DataRequired( message='Valor obligatorio y numerico'),NumberRange(min=5,max=99999999999999999999999999999999999, message='Valor debe estar entre 5 y 50')])    
+    description = StringField('Descripción',validators=[DataRequired( message='Descripción obligatorio'),length(min=5,max=50, message='Descripción debe estar entre 5 y 50')])    
     submit = SubmitField('Crear')        
 
 class DeleteTodoForm(FlaskForm):    

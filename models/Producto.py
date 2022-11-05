@@ -3,7 +3,9 @@ from marshmallow_sqlalchemy import auto_field
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.dialects.postgresql import UUID
+
 import uuid
+import datetime
 from app import db
 from app import ma
 
@@ -15,42 +17,14 @@ class ProductoModel(db.Model):
     barcode = db.Column(db.String(256), unique=False, nullable=False)
     descripcion = db.Column(db.Text, nullable=False)    
     valor = db.Column(db.Float, nullable=False)    
-    created_at = db.Column(db.Date, nullable=False)  
+    created_at = db.Column(db.DateTime(timezone=True),default=datetime.datetime.utcnow ,nullable=False)  
 
     def __repr__(self):
         return "<ProductoModel(name={self.barcode!r})>".format(self=self)
-
-    ''' def __repr__(self):
-        return f'<User {self.email}>'
-    def set_password(self, password):
-        self.password = generate_password_hash(password)
-    def check_password(self, password):
-        return check_password_hash(self.password, password)'''
-
-    def save(self):
-        if not self.id:
-            db.session.add(self)
-        db.session.commit()
-
-        '''
-        if not self.title_slug:
-            self.title_slug = slugify(self.title)
-        '''
-
-        '''
-        saved = False
-        count = 0
-        while not saved:
-            try:
-                db.session.commit()
-                saved = True
-            except IntegrityError:
-                count += 1
-                self.title_slug = f'{slugify(self.title)}-{count}'''
   
     @staticmethod
-    def get_by_id(id):
-        return ProductoModel.query.get(id)
+    def get_by_cod(barcode,id_user):
+        return ProductoModel.query.filter_by(barcode=barcode).filter_by(id_user=id_user).order_by(ProductoModel.created_at.desc()).all()
     @staticmethod
     def get_by_user(id_user):
         return ProductoModel.query.filter_by(id_user=id_user).first()
@@ -63,8 +37,12 @@ class ProductoModel(db.Model):
     def delete_producto(id):
         producto = ProductoModel.query.filter_by(id=id).first()
         db.session.delete(producto)
-        db.session.commit()       
-        
+        db.session.commit() 
+
+    @staticmethod
+    def barcode_producto(barcode,id_user):              
+        return db.session.query(ProductoModel).filter_by(barcode=barcode).filter_by(id_user=id_user).first() is not None
+
 class ProductoSchema(ma.SQLAlchemySchema):
     class Meta:
         model = ProductoModel
@@ -77,4 +55,5 @@ class ProductoSchema(ma.SQLAlchemySchema):
     barcode = auto_field()
     descripcion = auto_field()   
     valor = auto_field()
-    created_at = auto_field()
+    created_at = auto_field()        
+        

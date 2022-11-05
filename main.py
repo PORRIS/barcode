@@ -3,7 +3,6 @@ from flask import  request, make_response, redirect, render_template, session, u
 from flask_login import login_required, current_user
 
 from app import create_app
-from app.forms import TodoForm, DeleteTodoForm, UpdateTodoForm
 
 app = create_app()
 
@@ -38,22 +37,13 @@ def hello():
 	#forma de poner una variable dentro de un string: f'Hello World Platzi, tu IP es {user_ip}'
 
     #id del usuario logueado
-    username = current_user.id
-
-    todo_form = TodoForm()
-    delete_form = DeleteTodoForm()
-    update_form = UpdateTodoForm()
+    username = current_user.id   
+    
     context = {
-		'user_ip': user_ip,
-		#'todos': get_todos(user_id=username),
-        'username': username,
-        'todo_form': todo_form,
-        'delete_form': delete_form,
-        'update_form': update_form,        
+		'user_ip': user_ip,		
+        'username': username                  
 	}
-    if todo_form.validate_on_submit():       
-        flash("Tarea creada con exito", category='success')
-        return redirect(url_for('hello'))
+   
 	#los ** expande un diccionario	
     return  render_template('hello.html', **context)
     

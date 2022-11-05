@@ -35,6 +35,8 @@ def create_app():
     ma.init_app(app)
     from auth import auth
     app.register_blueprint(auth)
+    from lector import lector
+    app.register_blueprint(lector)
 
     
     #para  que funcione y se pueda usar la variable app  "from app import db" en el modelo de ProductoModel que se llama en api_sql_alchemy

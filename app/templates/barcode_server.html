@@ -1,0 +1,302 @@
+{% extends 'base.html'  %}
+
+{% block title %}
+{{super()}}
+Lector  
+{% endblock %}
+
+{% block content %}
+    <!-- App Header -->
+    <div class="appHeader bg-primary text-light">
+      <div class="left">
+        <a href="javascript:;" class="headerButton goBack">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </a>
+      </div>
+      <div class="pageTitle">Lector Servidor</div>
+      <div class="right"></div>
+    </div>
+    <!-- * App Header -->
+    <!-- Extra Header -->
+    <div class="extraHeader p-0">
+      <ul class="nav nav-tabs lined" role="tablist">
+        <li class="nav-item"   id="lector_tab">
+          <a class="nav-link active" data-toggle="tab" href="#lector" role="tab">
+            Lector
+          </a>
+        </li>
+        <li class="nav-item" id="crear_tab" style="display: none;">
+          <div class="left">
+            <a href="#" class="headerButton tab_init">
+              <ion-icon size="large" name="chevron-back-outline"></ion-icon>
+            </a>
+          </div>
+          <a class="nav-link" id="href_cr" data-toggle="tab" href="#crear" role="tab"  >
+            
+          </a>
+        </li>
+        <li class="nav-item" id="historico_tab"  style="display: none;">
+          <div class="left">
+            <a href="#" class="headerButton tab_init">
+              <ion-icon size="large" name="chevron-back-outline"></ion-icon>
+            </a>
+          </div>
+          <a class="nav-link" data-toggle="tab" href="#historico" role="tab">
+            Historico
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- * Extra Header -->
+    
+    <!-- App Capsule -->
+    <div id="appCapsule" class="extra-header-active">
+    
+      <div class="tab-content mt-1">        
+       <!-- lector tab -->
+       <div class="tab-pane fade show active" id="lector" role="tabpanel">
+          <div class="section full mt-2">
+            <div class="section-title">Lector</div>
+            <div class="wide-block pt-2 pb-2">
+              <input type="hidden" id="name_file">
+              <div class="controller container">
+                <select id="select" class="form-control mobileSelect">
+                  <option value="" selected disabled hidden>Cambiar camara</option>
+                </select>
+                </br>
+                <button id="change_cam" class="btn btn-dark btn-lg btn-block">Cambiar Camara</button>
+              </div>
+              </br>
+              </br>
+              <div>
+                <h1 class="text-primary" id="mensaje"></h1>
+      
+              </div>
+              <div>
+                <h1 class="text-success" id="barcode"></h1>
+              </div>
+              <div class="table-responsive" id="table_codes" style="display: none;">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Codigo</th>
+                    </tr>
+                  </thead>
+                  <tbody id='table_code_body'>
+                  </tbody>
+                </table>
+              </div>
+              <!-- Stream video via webcam -->
+              <div class="video-wrap">
+                <video id="video" playsinline autoplay></video>
+                <!-- Webcam video snapshot -->
+                <canvas id="canvas" width="640" height="480" style="display: none;"></canvas>
+              </div>      
+              <!-- Trigger canvas web API -->
+              <div class="controller">
+                <button id="snap" class="btn btn-primary btn-lg btn-block">Capture</button>
+                <button id="save" class="btn btn-success btn-lg btn-block" style="display: none;">Save</button>
+                <button id="code" class="btn btn-secondary btn-lg btn-block" style="display: none;">Codigo</button>
+                <button id="drop" class="btn btn-secondary btn-lg btn-block" style="display: none;">Reiniciar</button>
+              </div>
+            </div>
+          </div>
+      </div>
+      <!-- * lector tab -->
+      <!-- Crear tab -->
+      <div class="tab-pane fade" id="crear" role="tabpanel">
+
+        <div class="section full mt-1">
+            <div class="section-title" id="tab_title_cr"></div>
+            <div class="wide-block pt-2 pb-2">
+              <form action="" method="post"  class="needs-validation form" id="create_code_form" role="form">
+                {{ barcode_create_form.hidden_tag()}}
+                
+    
+                <div class="form-group boxed">
+                  <div class="input-wrapper">
+                      <label class="label" for="barcode">Codigo</label>                      
+                      {{ barcode_create_form.barcode(class="form-control",placeholder="Codigo de barras",id="input_bardoce")}}
+                      <i class="clear-input">
+                          <ion-icon name="close-circle"></ion-icon>
+                      </i>
+                      <div class="valid-feedback">Todo bien!</div>
+                      <div class="invalid-feedback">Por favor ingrese un codigo.</div>
+                  </div>
+              </div>
+
+              <div class="form-group boxed">
+                  <div class="input-wrapper">
+                      <label class="label" for="description">Descripción</label>
+                      {{ barcode_create_form.description(class="form-control",placeholder="Descripción",id="input_descripcion")}}
+                      <i class="clear-input">
+                          <ion-icon name="close-circle"></ion-icon>
+                      </i>
+                      <div class="valid-feedback">Todo bien!</div>
+                      <div class="invalid-feedback">Por favor ingrese una descripción.</div>
+                  </div>
+              </div>
+              <div class="form-group boxed">
+                <div class="input-wrapper">
+                    <label class="label" for="valor">Valor</label>
+                    {{ barcode_create_form.valor(class="form-control",placeholder="Valor",id="input_valor")}}
+                    <i class="clear-input">
+                        <ion-icon name="close-circle"></ion-icon>
+                    </i>
+                    <div class="valid-feedback">Todo bien!</div>
+                    <div class="invalid-feedback">Por favor ingrese un valor.</div>
+                </div>
+            </div>
+            <div class="content error_from message-divider" style="display:none ;">              
+              
+            </div>
+              <div class="mt-2">                  
+                  {{ barcode_create_form.submit(class="btn btn-primary btn-block btn-lg",id="create_barcode")}}
+              </div>
+              </form>
+            </div>
+        </div>
+
+    </div>
+          <!-- * Crear tab -->
+
+
+          <!-- historico tab -->
+          <div class="tab-pane fade" id="historico" role="tabpanel">
+
+              <div class="section full mt-2">
+                  <div class="section-title" id="title_historico"></div>
+                  <div class="wide-block">
+                     <!-- timeline -->
+                <div class="timeline timed historico_line">
+                 
+                </div>
+              <!-- * timeline -->
+                  </div>
+              </div>
+
+          </div>
+          <!-- * historico tab -->
+          
+
+
+    </div>
+    <!-- * App Capsule -->
+    <!-- Dialog Iconed Block -->
+    <div class="modal animated fade dialogbox" id="DialogBarcode" data-backdrop="static" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-icon " id="icon_modal">
+    
+          </div>
+          <div class="modal-header">
+            <h5 class="modal-title" id="title_modal"></h5>
+          </div>
+          <div class="modal-body">
+            <p id="message_modal"></p>
+            <span id="code_modal"></span>
+          </div>
+          <div class="modal-footer">
+            <div class="btn-list">
+              <a href="#" class="btn btn-text-primary btn-block" id="boton_registrar" style="display:none ;">
+                <ion-icon name="newspaper-outline"></ion-icon>
+                REGISTRAR
+              </a>
+              <a href="#" class="btn btn btn-text-secondary btn-block" id="boton_historico" style="display:none ;">
+                <ion-icon name="calendar-outline"></ion-icon>
+                HISTORICO
+              </a>
+              <a href="#" class="btn btn-text-info  btn-block" id="boton_crear" style="display:none ;">
+                <ion-icon name="barcode-sharp"></ion-icon>
+                CREAR
+              </a>
+              <a href="#" class="btn btn-text-danger  btn-block" id="boton_cerrar" data-dismiss="modal">
+                <ion-icon name="close-sharp"></ion-icon>
+                CERRAR
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ios style-->
+    <div id="notification-10" class="notification-box">
+    <div class="notification-dialog ios-style">
+        <div class="notification-header"> 
+          <div class="in">        
+            <strong>Sistema Barcode</strong>
+        </div>    
+            <div class="right">
+                <span>En este momento</span>
+                <a href="#" class="close-button">
+                    <ion-icon name="close-circle"></ion-icon>
+                </a>
+            </div>
+        </div>
+        <div class="notification-content">
+            <div class="in">
+                <h3 class="subtitle">Notificación</h3>
+                <div class="text">
+                    Codigo almacenado correctamente
+                </div>
+            </div>
+            <div class="icon-box text-success">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- * ios style -->
+    {% include 'navbar.html' %}
+
+{% endblock %}
+
+{% block scripts %}
+	{{super()}}
+  <script src="{{ url_for('static', filename='js/capture_image.js') }}"></script>
+	<script>
+jQuery(document).ready(function($) {	
+
+const fsc = document.querySelectorAll('.go-fs');
+  
+fsc.forEach(box => {
+  box.addEventListener('click', function handleClick(event) {
+    if (document.fullscreenElement) {
+		closeFullscreen();
+	} else {
+		openFullscreen();
+	}
+  });
+});
+
+  /* Get the documentElement (<html>) to display the page in fullscreen */
+var elem = document.documentElement;
+
+/* View in fullscreen */
+function openFullscreen() {
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) { /* Safari */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE11 */
+    elem.msRequestFullscreen();
+  }
+}
+
+/* Close fullscreen */
+function closeFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.webkitExitFullscreen) { /* Safari */
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) { /* IE11 */
+    document.msExitFullscreen();
+  }
+}
+
+});
+</script>
+
+{% endblock %}
