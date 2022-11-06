@@ -1,10 +1,12 @@
 import unittest
+from app import create_app
 from flask import  request, make_response, redirect, render_template, session, url_for, flash
 from flask_login import login_required, current_user
+from flask_uploads import UploadSet, IMAGES, configure_uploads
 
-from app import create_app
-
+photos = UploadSet('photos',IMAGES)
 app = create_app()
+configure_uploads(app,photos)
 
 
 #creando comando necesario para usar flask-test y unittest

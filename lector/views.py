@@ -6,13 +6,13 @@ import cv2
 import uuid
 from flask import render_template,session,flash,jsonify,url_for,request,redirect
 from flask_login import login_user, login_required,current_user
-from werkzeug.utils import secure_filename
 from pyzbar import pyzbar
 from datetime import datetime
 from . import lector
 #model
 from models.Producto import ProductoModel,ProductoSchema
-from app.forms import BarcodeCreateForm
+from app.forms import BarcodeCreateForm, UploadForm
+from werkzeug.utils import secure_filename
 from app import db
 
 
@@ -32,15 +32,17 @@ def get_client(tipo_cliente):
     username = current_user.username
     template = 'select_init.html'    
     context = {		
-        'username': username,         
+        'username': username, 
+        'barcode_create_form':BarcodeCreateForm()        
 	} 
     if(tipo_cliente == 1):
         template = 'barcode_client.html' 
     elif(tipo_cliente == 2):
-        template = 'barcode_server.html' 
-        context['barcode_create_form'] = BarcodeCreateForm()        
+        template = 'barcode_server.html'        
     elif(tipo_cliente == 3):
         template = 'barcode_load.html' 
+        context['load_form'] = UploadForm()
+        context['codigos'] = '{}'
     return render_template(template,**context)
 
 
@@ -101,7 +103,7 @@ def codebar(filename):
                 "mensaje": 'exito',
                 "barcode": barcodeData,            
             } 
-        #os.remove(barcodes)    
+        os.remove(barcodes)    
         return json.dumps(response)     
     except Exception as err:
         response = {

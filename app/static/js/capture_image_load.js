@@ -1,193 +1,68 @@
 'use strict';
 
-const video = document.getElementById('video');
-const canvas = document.getElementById('canvas');
-const snap = document.getElementById("snap");
-const save = document.getElementById("save");
 const code = document.getElementById("code");
-const change_cam = document.getElementById("change_cam");
 const errorMsgElement = document.querySelector('span#errorMsg');
-const drop = document.getElementById('drop');
+
+const subir_imagen = document.getElementById('subir_imagen');
+const form_subir_imagen = document.getElementById('form_subir_imagen');
+
 //tabs panel
-const lector_tab = document.getElementById('lector_tab');
+const lector_tab = document.getElementById('cargador_tab');
 const crear_tab = document.getElementById('crear_tab');
 const historico_tab = document.getElementById('historico_tab');
+const mostrar_cargador = document.getElementById('mostrar_cargador');
+
 
 let barcode_global = '';
 
-let namespace = "/lector/guardar";
+let namespace = "/cargador/guardar";
 let key_cam = false;
 let currentStream;
-
-let constraints = {
-  audio: false,
-  video: {
-    width: { max: 480,min:380 },
-    height: { max: 500, min:380 },
-    facingMode:  'user' 
-  }
-   
-};
-
-// Access webcam
-async function init() {
-  try {
-
-    const stream = await navigator.mediaDevices
-    .getUserMedia(constraints)
-    .then(stream => {
-      currentStream = stream;
-      video.srcObject = stream;
-      window.stream = stream;
-      return navigator.mediaDevices.enumerateDevices();
-    })
-    .then(gotDevices)
-    .catch(error => {
-      console.error(error);
-    });
-    //handleSuccess(stream);
-  } catch (e) {
-    errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
-  }
-}
-
-// Success
-function handleSuccess(stream) {
-  window.stream = stream;
-  video.srcObject = stream;
-}
-
-// Load init
-init();
-
-// Draw image
-var context = canvas.getContext('2d');
-snap.addEventListener("click", function() {
-        $('#mensaje').html('')
-        $('#barcode').html('')
-        context.drawImage(video, 0, 0, 480, 480);
-        document.getElementById('canvas').style.display	= 'block';
-        document.getElementById('video').style.display	= 'none';
-        document.getElementById('save').style.display	= 'block';                
-        document.getElementById('drop').style.display	= 'block';
-        document.getElementById('table_codes').style.display	= 'none';
-});
-
-video.addEventListener("click", function() {
-  $('#mensaje').html('')
-  $('#barcode').html('')
-  context.drawImage(video, 0, 0, 480, 480);
-  document.getElementById('canvas').style.display	= 'block';
-  document.getElementById('video').style.display	= 'none';
-  document.getElementById('save').style.display	= 'block';                 
-  document.getElementById('drop').style.display	= 'block';
+mostrar_cargador.addEventListener("click", function(event) {
+  form_subir_imagen.style.display	= '';
+  mostrar_cargador.style.display	= 'none';
   document.getElementById('table_codes').style.display	= 'none';
 });
 
-drop.addEventListener("click", function() {
-  context.clearRect(0, 0, 640, 480);
-  document.getElementById('video').style.display	= '';
-  document.getElementById('canvas').style.display	= 'none';
-  document.getElementById('save').style.display	= 'none';                
-  document.getElementById('drop').style.display	= 'none';
-  document.getElementById('table_codes').style.display	= 'none';
-  $('#mensaje').html('')
-  $('#barcode').html('')
-});
-
-save.addEventListener("click", function() {
-    var canva = document.getElementById('canvas');    
-    var dataUrl = canva.toDataURL('image/png');
-    var info = dataUrl.split(",",2)
-    var myObj = {'photo': info[1]};
-    $('#mensaje').html('')
-    $('#barcode').html('')
-   
-    //var formData = new FormData();
-    //formData.append("photo",dataUrl)
-    
-    $.ajax({
-        url: location.protocol + '//' + document.domain + ':' + location.port + namespace,
-        type: "POST",
-        data: JSON.stringify(myObj),
-       // data: FormData,
-        cache: false,
-        dataType: "json",
-        contentType: "application/json",
-      //  contentType: false,
-        //processData: false,
-        success: function(resp){            
-            if(resp.error == 0){
-                $('#mensaje').html(resp.mensaje);
-            }else{
-                $('#mensaje').html(resp.mensaje);
-                $('#name_file').val(resp.name_file);
-                $('#code').click();
-            }
-        }
-
-    });    
-});
-
-change_cam.addEventListener("click", function() { 
-  
-  if (typeof currentStream !== 'undefined') {
-    stopMediaTracks(currentStream);
-  }
-  const videoConstraints = {};
-  if (select.value === '') {
-    videoConstraints.facingMode = 'environment';
-  } else {
-    videoConstraints.deviceId = { exact: select.value };
-  }  
-  const constraints = {
-    video: videoConstraints,
-    audio: false
-  };
-  navigator.mediaDevices
-    .getUserMedia(constraints)
-    .then(stream => {
-      currentStream = stream;
-      video.srcObject = stream;
-      return navigator.mediaDevices.enumerateDevices();
-    })
-    .then(gotDevices)
-    .catch(error => {
-      console.error(error);
-    });
-});
-
-code.addEventListener("click", function() { 
-  $('#mensaje').html('')
-  $('#barcode').html('')
+subir_imagen.addEventListener("click", function(event) {
+  event.preventDefault();
+  var formData = new FormData(form_subir_imagen);
   $.ajax({
-      url: location.protocol + '//' + document.domain + ':' + location.port + '/lector/codigo/'+ $('#name_file').val(),//'imagen4.jpeg',
-      type: "GET",           
-      cache: false,
-      dataType: "json",
-      contentType: "application/json",
-      success: function(resp){            
-          if(resp.error == 0){
-              $('#mensaje').html('error:'+resp.mensaje)
+    type: "POST",
+    url: location.protocol + '//' + document.domain + ':' + location.port + '/cargador',
+    data: formData,
+    processData: false,
+    dataType: "json",    
+    contentType: false,
+    success:function (data) {
+      console.log(data.status)
+      event.preventDefault();
+      if(data.status){                
+        let barcode = data.barcode;
+        if(barcode.length){
+          $('#table_code_body').html('');
+          if(barcode.length > 1){                       
+            barcode.forEach(mostrarCodigos);
+            document.getElementById('table_codes').style.display	= '';
+            form_subir_imagen.style.display	= 'none';
+            mostrar_cargador.style.display	= '';
           }else{
-              $('#mensaje').html(resp.mensaje)
-              let data = resp.barcode;
-              if(data.length){                
-                $('#table_code_body').html('');
-                if(data.length > 1){           
-                  document.getElementById('canvas').style.display	= 'none'; 
-                  data.forEach(mostrarCodigos);
-                  document.getElementById('table_codes').style.display	= '';
-                }else{
-                  DialigBarcode(data[0].code,String(data[0].status))                 
-                }
-                
-              }else{
-                $('#barcode').html('NO SE DETECTO EL CODIGO')
-              }    
+            DialigBarcode(barcode[0].code,String(barcode[0].status))                 
           }
-      }
-  });  
+          
+        }else{          
+          $('.error_from2').html('<h4 class="title btn-text-danger">NO SE DETECTO UN CODIGO</h4>') 
+        }
+      }else{
+        let errors = data.message;
+        jQuery.each(errors,function(i, val) {
+          $('.error_from2').html('<h4 class="title btn-text-danger">'+val[0]+'</h4>') 
+        })               
+        $('.error_from2').show()                
+      }          
+    
+    }
+  });
 });
 
 function mostrarCodigos(element, index, array) {  
@@ -199,29 +74,6 @@ function mostrarCodigos(element, index, array) {
       <td style="display: none;">'+element.status+'</td>\
       </tr>');
     }
-const select = document.getElementById('select');
-
-function stopMediaTracks(stream) {
-  stream.getTracks().forEach(track => {
-    track.stop();
-  });
-}
-
-function gotDevices(mediaDevices) {
-  select.innerHTML = '';
-  select.appendChild(document.createElement('option'));
-  let count = 1;
-  mediaDevices.forEach(mediaDevice => {
-    if (mediaDevice.kind === 'videoinput') {
-      const option = document.createElement('option');
-      option.value = mediaDevice.deviceId;
-      const label = mediaDevice.label || `Camera ${count++}`;
-      const textNode = document.createTextNode(label);
-      option.appendChild(textNode);
-      select.appendChild(option);
-    }
-  });
-}
 
 $('#table_code_body').on('click', 'tr', function () {  
   var currentRow=$(this).closest("tr");         
@@ -341,13 +193,12 @@ $('#boton_crear').click(function(event){
 });
 
 $('.tab_init').click(function(event){
-  $('.nav-tabs a[href="#lector"]').tab('show');
+  $('.nav-tabs a[href="#cargador"]').tab('show');
   lector_tab.style.display	= '';
   crear_tab.style.display	= 'none';
   historico_tab.style.display	= 'none';
   
 });
-
 
 $(document).ready(function () {
   $("#create_barcode").click(function (event) {
@@ -384,9 +235,5 @@ $(document).ready(function () {
             form.classList.add('was-validated');
     });
     
-  });
-
-
-
-  
+  });  
 });
