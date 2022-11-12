@@ -41,8 +41,7 @@ def get_client(tipo_cliente):
         template = 'barcode_server.html'        
     elif(tipo_cliente == 3):
         template = 'barcode_load.html' 
-        context['load_form'] = UploadForm()
-        context['codigos'] = '{}'
+        context['load_form'] = UploadForm()       
     return render_template(template,**context)
 
 

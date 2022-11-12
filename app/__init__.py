@@ -39,7 +39,8 @@ def create_app():
     app.register_blueprint(lector)
     from loader import loader
     app.register_blueprint(loader)
-
+    from cliente import cliente
+    app.register_blueprint(cliente)
     
     #para  que funcione y se pueda usar la variable app  "from app import db" en el modelo de ProductoModel que se llama en api_sql_alchemy
   #  from api_sql_alchemy import api_alchemy
