@@ -2,11 +2,14 @@ from flask import render_template,session,flash,redirect,url_for
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash,check_password_hash #libreria para generar hash
 
-from app.forms import LoginForm, SignUp
-from models.User import UserData, get_user, UserModel, put_user
+from app.forms import LoginForm, SignUp, ResetEmail
+from models.User import UserData, get_user, UserModel, put_user, get_user_email_exist, get_user_email_data
+
+from flask_mail import Message
 
 from . import auth
-
+from app import mail
+import uuid
 
 @auth.route('/login',methods=['GET'])
 def login():
@@ -62,12 +65,13 @@ def signup():
     if signup_form.validate_on_submit():
         username = signup_form.username.data
         password = signup_form.password.data
+        email = signup_form.email.data
 
         user_doc = get_user(username)
 
         if(user_doc is None):
             password_hash = generate_password_hash(password)
-            user_data = UserData(username,password_hash)
+            user_data = UserData(username,password_hash,str(uuid.uuid4()),email,password)
             put_user(user_data)
 
             user = UserModel(user_data)
@@ -79,6 +83,29 @@ def signup():
 
 
     return render_template('signup.html',**context)
+
+@auth.route("/send_email", methods=['GET', 'POST'])
+def reset():
+    reset_form = ResetEmail()
+    context = {
+    'reset_form': reset_form
+    }
+    if reset_form.validate_on_submit():               
+        email = reset_form.email.data
+
+        user_doc = get_user_email_exist(email)
+
+        if(user_doc):
+            user_data = get_user_email_data(email)
+            msg = Message('Recuperación de contraseña', sender =   'barcode@mailtrap.io', recipients = [email])
+            msg.body = "Hola, tu usuario es %s y tu contraseña: %s"%(str(user_data[0]),str(user_data[1]))
+            mail.send(msg)           
+            flash("Correo enviado", category='danger')
+        else:
+            flash("El correo no existe", category='danger')
+
+    return render_template('reset_password.html',**context)   
+       
 
 @auth.route('logout')
 @login_required #para garantizar hacer logout a un usuario que este logueado

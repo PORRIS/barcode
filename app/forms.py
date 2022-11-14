@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms.fields import StringField, PasswordField, SubmitField, FileField, FloatField
+from wtforms.fields import StringField, PasswordField, SubmitField, FileField, FloatField, EmailField,BooleanField 
 from flask_wtf.file import FileField, FileRequired,FileAllowed
-from wtforms.validators import DataRequired, InputRequired, EqualTo, length, NumberRange
+from wtforms.validators import DataRequired, InputRequired, EqualTo, length, NumberRange, Email
 from wtforms import SubmitField as SubmitFieldFile
 from flask_uploads import UploadSet, IMAGES
+import email_validator
 
 '''
 usando flask_wtf para crear un formulario
@@ -17,10 +18,16 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Enviar')
 
 class SignUp(FlaskForm):
-    username = StringField('Nombre de Usuario',validators=[DataRequired()])
-    password = PasswordField('Password',validators=[DataRequired(), InputRequired()])
-    password_repeat = PasswordField('Repite tu Password',validators=[DataRequired(),InputRequired(),EqualTo('password')])
+    username = StringField('Nombre de Usuario',validators=[DataRequired(message='Campo obligatorio')])
+    password = PasswordField('Contraseña',validators=[DataRequired(message='Campo obligatorio'), InputRequired()])
+    password_repeat = PasswordField('Repite tu Contraseña',validators=[DataRequired(message='Campo obligatorio'),InputRequired(),EqualTo('password','Las contraseña no son iguales.')])
+    email = EmailField('Correo electronico',validators=[InputRequired(),DataRequired(),Email(message='Es invalido')])
+    checkbox = BooleanField('Aceptar terminos y condiciones', validators=[DataRequired(),])
     submit = SubmitField('Enviar')    
+
+class ResetEmail(FlaskForm):    
+    email = EmailField('Correo electronico',validators=[InputRequired(),DataRequired(),Email(message='Es invalido')])    
+    submit = SubmitField('Enviar')       
 
 class BarcodeCreateForm(FlaskForm):
     barcode = StringField('Codigo',validators=[DataRequired(message='Codigo obligatorio'),length(min=2,max=80, message='Codigo debe estar entre 2 y 80')])    
@@ -40,5 +47,3 @@ class DeleteTodoForm(FlaskForm):
 
 class UpdateTodoForm(FlaskForm):    
     submit = SubmitField('Actualizar')       
-
- 

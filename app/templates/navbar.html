@@ -53,7 +53,7 @@
 
                     <ul class="listview flush transparent no-line image-listview mt-2">
                         <li>
-                            <a href="index.html" class="item">
+                            <a href="{{ url_for('hello')}}" class="item">
                                 <div class="icon-box bg-primary">
                                     <ion-icon name="home-outline"></ion-icon>
                                 </div>
@@ -63,33 +63,33 @@
                             </a>
                         </li>
                         <li>
-                            <a href="app-components.html" class="item">
+                            <a href="{{ url_for('lector.get_client', tipo_cliente=1)}}" class="item">
                                 <div class="icon-box bg-primary">
-                                    <ion-icon name="cube-outline"></ion-icon>
+                                    <ion-icon name="logo-javascript"></ion-icon>
                                 </div>
                                 <div class="in">
-                                    Components
+                                    Lector en JS
                                 </div>
                             </a>
                         </li>
                         <li>
-                            <a href="app-pages.html" class="item">
+                            <a href="{{ url_for('lector.get_client', tipo_cliente=2)}}" class="item">
                                 <div class="icon-box bg-primary">
-                                    <ion-icon name="layers-outline"></ion-icon>
+                                    <ion-icon name="logo-python"></ion-icon>
                                 </div>
                                 <div class="in">
-                                    <div>Pages</div>
+                                    <div>Lector en Python</div>
                                 </div>
                             </a>
                         </li>
                         <li>
-                            <a href="page-chat.html" class="item">
+                            <a href="{{ url_for('lector.get_client', tipo_cliente=3)}}" class="item">
                                 <div class="icon-box bg-primary">
-                                    <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+                                    <ion-icon name="cloud-upload-outline"></ion-icon>
                                 </div>
                                 <div class="in">
-                                    <div>Chat</div>
-                                    <span class="badge badge-danger">5</span>
+                                    <div>Lector Cargador</div>
+                                    
                                 </div>
                             </a>
                         </li>
@@ -122,7 +122,7 @@
                     <a href="javascript:;" class="button">
                         <ion-icon name="settings-outline"></ion-icon>
                     </a>
-                    <a href="javascript:;" class="button" id="noFS">
+                    <a href="{{ url_for('auth.logout') }}" class="button" id="noFS">
                         <ion-icon name="log-out-outline"></ion-icon>
                     </a>
                 </div>

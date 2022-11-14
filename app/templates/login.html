@@ -41,10 +41,10 @@
 
                     <div class="form-links mt-2">
                         <div>
-                             <a href="page-register.html">Regístrate ahora</a>
+                             <a href="{{ url_for('auth.signup') }}">Regístrate ahora</a>
                             
                         </div>
-                        <div><a href="page-forgot-password.html" class="text-muted">Has olvidado tu contraseña?</a></div>
+                        <div><a href="{{ url_for('auth.reset') }}" class="text-muted">Has olvidado tu contraseña?</a></div>
                     </div>
 
                     <div class="form-button-group">

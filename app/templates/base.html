@@ -29,12 +29,18 @@
     </div>
     <!-- * loader -->
     {% for category, message in get_flashed_messages(with_categories=true) %}
-        <div class="alert alert-{{ category }} alert-dismissible">
-            <button type="button"
-                    data-dismiss="alert"
-                    class="close">&times;</button>
-            {{ message }}
+    <div id="toast-general1" class="toast-box toast-bottom bg-{{ category }}">
+        <div class="in">
+            <div class="text">
+                {{ message }}
+            </div>
         </div>
+        <button type="button" class="btn btn-sm btn-text-light close-button">OK</button>
+    </div>
+
+        <script>	setTimeout(() => {
+            toastbox('toast-general1', 3000);		
+        }, 1000);</script>
     {% endfor %}
 
     {% block content %}

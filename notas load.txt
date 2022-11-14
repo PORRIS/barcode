@@ -1,1 +1,14 @@
 https://www.pythonfixing.com/2022/07/fixed-flaskuploads-importerror-cannot.html
+
+File "/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/flask_uploads.py", line 26,
+ in <module>
+
+In flask_uploads.py
+
+Change
+
+from werkzeug import secure_filename,FileStorage
+to
+
+from werkzeug.utils import secure_filename
+from werkzeug.datastructures import  FileStorage

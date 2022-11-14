@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
-
+from flask_mail import Mail
 
 from .config import config
 
@@ -15,6 +15,7 @@ login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 db = SQLAlchemy()
 ma = Marshmallow()
+mail = Mail()
 
 from models.User import UserModel
 
@@ -33,6 +34,7 @@ def create_app():
     login_manager.init_app(app)
     db.init_app(app)
     ma.init_app(app)
+    mail.init_app(app)
     from auth import auth
     app.register_blueprint(auth)
     from lector import lector
