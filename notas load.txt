@@ -12,3 +12,59 @@ to
 
 from werkzeug.utils import secure_filename
 from werkzeug.datastructures import  FileStorage
+***********************************************************************************************************************************************************
+
+OJO para pythonanywhere.com toco usar mysql ya que no tiene postgres por tanto toco:
+usar el sql de mysql, cambiar la coneccion de la bd de 
+'postgresql://postgres:postgres@localhost:5432/flask_barcode'
+a
+'mysql+pymysql://porris123:mysql0328@porris123.mysql.pythonanywhere-services.com/porris123$flask_barcode'
+e instalar
+pip uninstall pymysql
+
+***********************************************************************************************************************************************************
+
+OJO en pythonanywhere toca dejar 
+/var/www/porris123_pythonanywhere_com_wsgi.py 
+de la  siguiente manera:
+
+import sys
+import os
+import time
+
+os.environ["TZ"] = "America/Bogota"
+time.tzset()
+
+# add your project directory to the sys.path
+project_home = '/home/porris123/mysite/barcode'
+if project_home not in sys.path:
+    sys.path = [project_home] + sys.path
+
+# import flask app but need to call it "application" for WSGI to work
+from main import app as application  # noqa
+
+
+y en el despligue usar:
+
+ opcion 2 
+ mkvirtualenv myvirtualenv --python=/usr/bin/python3.7
+ workon myvirtualenv
+ pip install -r requirements.txt
+ 
+export "FLASK_APP=main.py"
+export "FLASK_DEBUG=1"
+
+CAMBIAR EN EL PANEL EL VIRTUALENV
+/home/porris123/.virtualenvs/myvirtualenv  
+
+*******************************
+cambiar hora 
+export TZ="America/New_York"
+
+y en el archivo del WSGI 
+
+import os
+import time
+
+os.environ["TZ"] = "America/New_York"
+time.tzset()
